@@ -5,15 +5,16 @@
     xmlns:cp="clr-namespace:MaterialDesignThemes.Wpf.Converters.CircularProgressBar;assembly=MaterialDesignThemes.Wpf">
 
     <Style x:Key="M3FloatingActionMiniButton" TargetType="{x:Type ButtonBase}">
-        <Setter Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary.Light}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Primary.Foreground}" />
+        <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Primary.Light}" />
         <Setter Property="Height" Value="40" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="Padding" Value="1" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Tag" Value="{DynamicResource MaterialDesign.Brush.Foreground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -40,7 +41,7 @@
                                      Opacity="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(m3:ButtonProgressAssist.Opacity)}"
                                      RenderTransformOrigin=".5, .5"
                                      Style="{DynamicResource MaterialDesignCircularProgressBar}"
-                                     Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(m3:ButtonProgressAssist.IsIndicatorVisible), Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(m3:ButtonProgressAssist.IsIndicatorVisible), Converter={x:Static m3:BooleanToVisibilityConverter.CollapsedInstance}}"
                                      Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(m3:ButtonProgressAssist.Value)}">
                             <ProgressBar.RenderTransform>
                                 <TransformGroup>
@@ -67,17 +68,20 @@
                                  IsHitTestVisible="False" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="Button.IsDefaulted" Value="true">
+                        <Trigger Property="Button.IsDefaulted" Value="True">
                             <Setter TargetName="border" Property="Stroke"
                                     Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Opacity" Value="1" />
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background"
+                                    Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={x:Static m3:BrushOpacityConverter.Instance}, ConverterParameter=0.1}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={x:Static m3:BrushOpacityConverter.Instance}, ConverterParameter=0.1}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="m3:ShadowAssist.Darken" Value="True" />
                         </Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="true">
+                        <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="border" Property="m3:ShadowAssist.Darken" Value="True" />
                         </Trigger>
                         <Trigger Property="m3:ButtonProgressAssist.IsIndicatorVisible" Value="True">
@@ -188,13 +192,14 @@
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathFigure
-                                            StartPoint="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={StaticResource StartPointConverter}, Mode=OneWay}">
+                                            StartPoint="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={x:Static cp:StartPointConverter.Instance}, Mode=OneWay}">
                                             <ArcSegment
-                                                Size="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={StaticResource ArcSizeConverter}, Mode=OneWay}"
+                                                Size="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={x:Static cp:ArcSizeConverter.Instance}, Mode=OneWay}"
                                                 SweepDirection="Clockwise">
                                                 <ArcSegment.Point>
-                                                    <MultiBinding Converter="{StaticResource ArcEndPointConverter}"
-                                                                  ConverterParameter="{x:Static cp:ArcEndPointConverter.ParameterMidPoint}">
+                                                    <MultiBinding
+                                                        Converter="{x:Static cp:ArcEndPointConverter.Instance}"
+                                                        ConverterParameter="{x:Static cp:ArcEndPointConverter.ParameterMidPoint}">
                                                         <Binding ElementName="PathGrid" Path="ActualWidth" />
                                                         <Binding Path="Value"
                                                                  RelativeSource="{RelativeSource TemplatedParent}" />
@@ -208,10 +213,11 @@
                                                 </ArcSegment.Point>
                                             </ArcSegment>
                                             <ArcSegment
-                                                Size="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={StaticResource ArcSizeConverter}, Mode=OneWay}"
+                                                Size="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={x:Static cp:ArcSizeConverter.Instance}, Mode=OneWay}"
                                                 SweepDirection="Clockwise">
                                                 <ArcSegment.Point>
-                                                    <MultiBinding Converter="{StaticResource ArcEndPointConverter}">
+                                                    <MultiBinding
+                                                        Converter="{x:Static cp:ArcEndPointConverter.Instance}">
                                                         <Binding ElementName="PathGrid" Path="ActualWidth" />
                                                         <Binding Path="Value"
                                                                  RelativeSource="{RelativeSource TemplatedParent}" />
@@ -230,8 +236,8 @@
                                 <Path.RenderTransform>
                                     <TransformGroup>
                                         <RotateTransform x:Name="RotateTransform"
-                                                         CenterX="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={StaticResource RotateTransformCentreConverter}, Mode=OneWay}"
-                                                         CenterY="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={StaticResource RotateTransformCentreConverter}, Mode=OneWay}" />
+                                                         CenterX="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={x:Static cp:RotateTransformCentreConverter.Instance}, Mode=OneWay}"
+                                                         CenterY="{Binding ElementName=PathGrid, Path=ActualWidth, Converter={x:Static cp:RotateTransformCentreConverter.Instance}, Mode=OneWay}" />
                                     </TransformGroup>
                                 </Path.RenderTransform>
                             </Path>
@@ -245,7 +251,7 @@
                                 <Condition Binding="{Binding IsVisible, RelativeSource={RelativeSource Self}}"
                                            Value="True" />
                                 <Condition
-                                    Binding="{Binding Value, RelativeSource={RelativeSource Self}, Converter={StaticResource NotZeroConverter}}"
+                                    Binding="{Binding Value, RelativeSource={RelativeSource Self}, Converter={x:Static m3:NotZeroConverter.Instance}}"
                                     Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.EnterActions>

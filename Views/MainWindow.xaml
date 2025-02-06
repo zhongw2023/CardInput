@@ -20,18 +20,6 @@
         <cv:AckStatusToPathConverter x:Key="AckStatusToPathConverter" />
         <cv:AckStatusToVisibleConverter x:Key="AckStatusToVisibleConverter" />
 
-        <Style x:Key="ElevationStyle" TargetType="{x:Type m3:Card}">
-            <Setter Property="m3:ElevationAssist.Elevation" Value="{x:Static m3:Elevation.Dp0}" />
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="True">
-                    <Setter Property="m3:ElevationAssist.Elevation" Value="{x:Static m3:Elevation.Dp8}" />
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="m3:ElevationAssist.Elevation" Value="{x:Static m3:Elevation.Dp0}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
         <DataTemplate DataType="{x:Type md:Feature}">
             <Grid Width="340" Margin="15,0,15,0">
                 <Grid Margin="10">
